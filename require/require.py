@@ -7,7 +7,7 @@ import os
 # require.py takes advantage of this to namespace its modules
 PREFIX = '@require-'
 
-def require(relative_path):
+def py(relative_path):
   '''Returns the module object for the module at the specified relative path.
   Path is relative to calling script's path.
   '''
