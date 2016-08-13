@@ -19,12 +19,13 @@ mod = require.py('relative/path/to/module')
 
 directory structure:
 - test/
-  - bar.py
-  - foo/
+  - bar-directory/
+    - bar.py
+  - foo-directory/
     - foo.py
 
 ```python
-# bar.py
+# bar-directory/bar.py
 CONST = 'string constant'
 
 def hello():
@@ -32,9 +33,9 @@ def hello():
 ```
 
 ```python
-# foo
+# foo-directory/foo
 import require
-bar = require.py('../bar') # '.py' extension is optional
+bar = require.py('../bar-directory/bar') # '.py' extension is optional
 
 print bar.CONST
 print bar.hello()
