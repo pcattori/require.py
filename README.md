@@ -1,6 +1,6 @@
 # require.py
 
-Inspired by [require.js](http://requirejs.org/)
+Inspired by [Node.js](http://node.org/) `require`
 
 ## Install
 
