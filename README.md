@@ -13,6 +13,9 @@ $ pip install require.py
 ```python
 import require
 mod = require.py('relative/path/to/module')
+
+# optionally, use explicit './' prefix
+mod = require.py('./relative/path/to/module')
 ```
 
 ## Example
