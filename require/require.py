@@ -8,8 +8,9 @@ import os
 PREFIX = '@require-'
 
 def py(path):
-  '''Returns the module object for the module at the specified relative path.
-  Path is relative to calling script's path.
+  '''Returns the module object for the module at the specified path.
+  If path begins with a '/', it is treated as an absolute path.
+  Otherwise, the path is considered relative to calling script's path.
   '''
   if path.startswith('/'):
     absolute_path = path
