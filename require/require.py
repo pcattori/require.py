@@ -12,7 +12,7 @@ def py(path):
   If path begins with a '/', it is treated as an absolute path.
   Otherwise, the path is considered relative to calling script's path.
   '''
-  if path.startswith('/'):
+  if os.path.isabs(path):
     absolute_path = path
   else:
     # get absolute path by rooting relative path with calling script directory
