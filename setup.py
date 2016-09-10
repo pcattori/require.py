@@ -8,5 +8,6 @@ setup(
   author='Pedro Cattori',
   author_email='pcattori@gmail.com',
   license='MIT',
-  packages=['require']
+  packages=['require'],
+  test_suite='tests'
 )
