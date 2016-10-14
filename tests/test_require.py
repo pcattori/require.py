@@ -11,7 +11,7 @@ def hello():
 '''
 
 app_code_template = '''
-from require import require
+import require
 #import sys
 try:
   lib = require.require3('{}')
