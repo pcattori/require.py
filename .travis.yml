@@ -7,5 +7,3 @@ install: pip install .
 script:
 - python setup.py caniusepython3
 - pylint --py3k require tests
-- coverage run --source require setup.py test
-after_success: codecov

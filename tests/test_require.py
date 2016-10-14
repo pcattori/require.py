@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 import os
-from require import require
 import sh
 import subprocess
 import unittest
