@@ -1,9 +1,12 @@
-from require import require
 import os
-import subprocess
-import tempfile
-import unittest
+from require import require
 import sh
+import subprocess
+try:
+  from tempfile import TemporaryDirectory
+except ImportError:
+  from backports.tempfile import TemporaryDirectory
+import unittest
 
 lib_code = '''# lib.py
 def hello():
@@ -11,10 +14,10 @@ def hello():
 '''
 
 app_code_template = '''
-import require
+from require import require
 #import sys
 try:
-  lib = require.require3('{}')
+  lib = require('{}')
   print(lib.hello())
 except Exception as e:
   print(str(e))
@@ -37,7 +40,7 @@ def place_at_path(contents, path):
 class RequireTest(unittest.TestCase):
 
   def test_sibling(self):
-    with tempfile.TemporaryDirectory() as tmp:
+    with TemporaryDirectory() as tmp:
 
       app = os.path.join(tmp, 'app.py')
       app_setup(app, './lib.py')
@@ -49,7 +52,7 @@ class RequireTest(unittest.TestCase):
       self.assertEqual(stdout, b'world\n')
 
   def test_descendant(self):
-    with tempfile.TemporaryDirectory() as tmp:
+    with TemporaryDirectory() as tmp:
       app = os.path.join(tmp, 'app.py')
       app_setup(app, './directory/lib.py')
 
@@ -60,7 +63,7 @@ class RequireTest(unittest.TestCase):
       self.assertEqual(stdout, b'world\n')
 
   def test_ancestor(self):
-    with tempfile.TemporaryDirectory() as tmp:
+    with TemporaryDirectory() as tmp:
       app = os.path.join(tmp, 'directory', 'app.py')
       app_setup(app, '../lib.py')
       lib = os.path.join(tmp, 'lib.py')
@@ -70,7 +73,7 @@ class RequireTest(unittest.TestCase):
       self.assertEqual(stdout, b'world\n')
 
   def test_arbitrary(self):
-    with tempfile.TemporaryDirectory() as tmp:
+    with TemporaryDirectory() as tmp:
       app = os.path.join(tmp, 'directory', 'app.py')
       app_setup(app, '../folder/lib.py')
       lib = os.path.join(tmp, 'folder', 'lib.py')
@@ -80,7 +83,7 @@ class RequireTest(unittest.TestCase):
       self.assertEqual(stdout, b'world\n')
 
   def test_absolute(self):
-    with tempfile.TemporaryDirectory() as tmp:
+    with TemporaryDirectory() as tmp:
       app = os.path.join(tmp, 'app.py')
       lib = os.path.join(tmp, 'lib.py')
       app_setup(app, lib)
@@ -91,7 +94,7 @@ class RequireTest(unittest.TestCase):
 
 
   def test_package(self):
-    with tempfile.TemporaryDirectory() as tmp:
+    with TemporaryDirectory() as tmp:
       app = os.path.join(tmp, 'app.py')
       lib = os.path.join(tmp, 'directory', '__init__.py')
       app_setup(app, './directory')
@@ -102,7 +105,7 @@ class RequireTest(unittest.TestCase):
 
 
   def test_no_file(self):
-    with tempfile.TemporaryDirectory() as tmp:
+    with TemporaryDirectory() as tmp:
       app = os.path.join(tmp, 'app.py')
       app_setup(app, './lib.py')
       lib = os.path.join(tmp, 'lib.py')
@@ -111,7 +114,7 @@ class RequireTest(unittest.TestCase):
       self.assertEqual(stdout, str.encode('No module at {}\n'.format(lib)))
 
   def test_invalid_python(self):
-    with tempfile.TemporaryDirectory() as tmp:
+    with TemporaryDirectory() as tmp:
       app = os.path.join(tmp, 'app.py')
       app_setup(app, './lib.py')
       lib = os.path.join(tmp, 'lib.py')
