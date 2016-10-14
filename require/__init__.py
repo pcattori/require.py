@@ -1,1 +1,1 @@
-from require import *
+from require.require import *
