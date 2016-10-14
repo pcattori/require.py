@@ -1,3 +1,8 @@
+[![PyPI version](https://badge.fury.io/py/require.py.svg)](https://badge.fury.io/py/require.py)
+[![Build Status](https://travis-ci.org/pcattori/require.py.svg?branch=master)](https://travis-ci.org/pcattori/require.py)
+[![Test Code Coverage](https://codecov.io/gh/pcattori/require.py/branch/master/graph/badge.svg)](https://codecov.io/gh/pcattori/require.py)
+[![Documentation Status](https://readthedocs.org/projects/require.py/badge/?version=latest)](http://require.py.readthedocs.io/en/latest/?badge=latest)
+
 # require.py
 
 Inspired by [require.js](http://requirejs.org/)
