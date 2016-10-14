@@ -104,24 +104,24 @@ class RequireTest(unittest.TestCase):
             stdout = subprocess.check_output(['python', app])
             self.assertEqual(stdout, b'world\n')
 
-  def test_no_file(self):
-      with TemporaryDirectory() as tmp:
-          app = os.path.join(tmp, 'app.py')
-          app_setup(app, './lib.py')
-          lib = os.path.join(tmp, 'lib.py')
+    def test_no_file(self):
+        with TemporaryDirectory() as tmp:
+            app = os.path.join(tmp, 'app.py')
+            app_setup(app, './lib.py')
+            lib = os.path.join(tmp, 'lib.py')
 
-          stdout = subprocess.check_output(['python', app])
-          self.assertEqual(stdout, str.encode('No module at {}\n'.format(lib)))
+            stdout = subprocess.check_output(['python', app])
+            self.assertEqual(stdout, str.encode('No module at {}\n'.format(lib)))
 
-  def test_invalid_python(self):
-      with TemporaryDirectory() as tmp:
-          app = os.path.join(tmp, 'app.py')
-          app_setup(app, './lib.py')
-          lib = os.path.join(tmp, 'lib.py')
-          place_at_path(garbage, lib)
+    def test_invalid_python(self):
+        with TemporaryDirectory() as tmp:
+            app = os.path.join(tmp, 'app.py')
+            app_setup(app, './lib.py')
+            lib = os.path.join(tmp, 'lib.py')
+            place_at_path(garbage, lib)
 
-          stdout = subprocess.check_output(['python', app])
-          self.assertEqual(stdout, str.encode("name '{}' is not defined\n".format(garbage)))
+            stdout = subprocess.check_output(['python', app])
+            self.assertEqual(stdout, str.encode("name '{}' is not defined\n".format(garbage)))
 
 if __name__ == '__main__':
     unittest.main()
