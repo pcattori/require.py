@@ -1,0 +1,11 @@
+language: python
+python:
+  - 2.7
+  - 3.5
+before_install: pip install -r test_requirements.txt
+install: pip install .
+script:
+- python setup.py caniusepython3
+- pylint --py3k require tests
+- coverage run --source require setup.py test
+after_success: codecov
