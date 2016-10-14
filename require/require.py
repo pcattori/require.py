@@ -1,20 +1,22 @@
-import importlib.util
 import inspect
 import os
+import six
 
 # TODO load more than 1x?
 def load_module_at(absolute_path):
-    '''Loads Python module at specified absolute path.
+    '''Loads Python module at specified absolute path. If path points to a
+    package, this will load the `__init__.py` (if it exists) for that package.
 
     :param str absolute_path: Absolute path to the desired Python module.
     :return: Imported Python module
-    :rtype: Module
+    :rtype: types.ModuleType
 
     Usage::
       >>> import require
       >>> require.load_module_at('/absolute/path/to/module')
       Module
     '''
+    import importlib.util
     if os.path.isdir(absolute_path):
         absolute_path = os.path.join(absolute_path, '__init__.py')
 
@@ -24,6 +26,20 @@ def load_module_at(absolute_path):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+def load_py2_module_at(absolute_path):
+  import imp
+  if os.path.isdir(absolute_path):
+      absolute_path = os.path.join(absolute_path, '__init__.py')
+
+  if not os.path.exists(absolute_path):
+      raise ImportError('No module at {}'.format(absolute_path))
+  # compute directory path and filename without extension
+  dirpath, filename = os.path.split(absolute_path)
+  filename_noext, _ = os.path.splitext(filename)
+
+  spec = imp.find_module(filename_noext, [dirpath])
+  return imp.load_module(absolute_path, *spec)
 
 def resolve_path(path, upstack=0):
     '''Resolve a path to an absolute path by taking it to be relative to the source
@@ -43,22 +59,34 @@ def resolve_path(path, upstack=0):
     if os.path.isabs(path):
         return path
     # get absolute path by rooting path with calling script directory
+    # TODO guard rails for upstack?
     caller_relative_filepath = inspect.stack()[upstack + 1][1]
     caller_root = os.path.dirname(os.path.abspath(caller_relative_filepath))
     return os.path.abspath(os.path.join(caller_root, path))
 
 # TODO python2/3 compatible?
-def require3(path):
-    '''
+def require(path):
+    '''Imports Python module at specified path (relative to calling script).
+
     :param str path: Relative path to the desired Python module. Should be
     relative to the path of the calling script.
+    :return: Loaded module
+    :rtype: types.ModuleType
 
     Usage::
-      >>> import require # at /arbitrary/path
-      >>> foo = require.require3('./foo.py') # imports /arbitrary/path/foo.py
+      >>> from require import require3 # at /home/user
+      >>> foo = require3('./foo.py') # imports /home/user/foo.py
       >>> foo
+      Module
+      >>> bar = require3('../arbitrary/path/bar.py') # imports /home/arbitrary/path/bar.py
+      >>> bar
+      Module
+      >>> baz = require3('/absolute/path/bar.py') # imports /absolute/path/baz.py
+      >>> baz
       Module
     '''
     absolute_path = resolve_path(path, upstack=1)
+    if six.PY2:
+      return load_py2_module_at(absolute_path)
     return load_module_at(absolute_path)
 
