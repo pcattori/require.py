@@ -3,11 +3,12 @@ import os
 from require import require
 import sh
 import subprocess
-try:
-  from tempfile import TemporaryDirectory
-except ImportError:
-  from backports.tempfile import TemporaryDirectory
 import unittest
+
+try:
+    from tempfile import TemporaryDirectory
+except ImportError:
+    from backports.tempfile import TemporaryDirectory
 
 lib_code = '''# lib.py
 def hello():
@@ -18,11 +19,11 @@ app_code_template = '''
 from require import require
 #import sys
 try:
-  lib = require('{}')
-  print(lib.hello())
+    lib = require('{}')
+    print(lib.hello())
 except Exception as e:
-  print(str(e))
-  #sys.exit(1)
+    print(str(e))
+    #sys.exit(1)
 '''
 
 garbage = '''lfasjd'''
@@ -34,95 +35,93 @@ def lib_setup(path):
     place_at_path(lib_code, path)
 
 def place_at_path(contents, path):
-  sh.mkdir('-p', os.path.dirname(path))
-  with open(path, 'w') as f:
-    f.write(contents)
+    sh.mkdir('-p', os.path.dirname(path))
+    with open(path, 'w') as f:
+        f.write(contents)
 
 class RequireTest(unittest.TestCase):
 
-  def test_sibling(self):
-    with TemporaryDirectory() as tmp:
+    def test_sibling(self):
+        with TemporaryDirectory() as tmp:
 
-      app = os.path.join(tmp, 'app.py')
-      app_setup(app, './lib.py')
+            app = os.path.join(tmp, 'app.py')
+            app_setup(app, './lib.py')
 
-      lib = os.path.join(tmp, 'lib.py')
-      lib_setup(lib)
+            lib = os.path.join(tmp, 'lib.py')
+            lib_setup(lib)
 
-      stdout = subprocess.check_output(['python', app])
-      self.assertEqual(stdout, b'world\n')
+            stdout = subprocess.check_output(['python', app])
+            self.assertEqual(stdout, b'world\n')
 
-  def test_descendant(self):
-    with TemporaryDirectory() as tmp:
-      app = os.path.join(tmp, 'app.py')
-      app_setup(app, './directory/lib.py')
+    def test_descendant(self):
+        with TemporaryDirectory() as tmp:
+            app = os.path.join(tmp, 'app.py')
+            app_setup(app, './directory/lib.py')
 
-      lib = os.path.join(tmp, 'directory', 'lib.py')
-      lib_setup(lib)
+            lib = os.path.join(tmp, 'directory', 'lib.py')
+            lib_setup(lib)
 
-      stdout = subprocess.check_output(['python', app])
-      self.assertEqual(stdout, b'world\n')
+            stdout = subprocess.check_output(['python', app])
+            self.assertEqual(stdout, b'world\n')
 
-  def test_ancestor(self):
-    with TemporaryDirectory() as tmp:
-      app = os.path.join(tmp, 'directory', 'app.py')
-      app_setup(app, '../lib.py')
-      lib = os.path.join(tmp, 'lib.py')
-      lib_setup(lib)
+    def test_ancestor(self):
+        with TemporaryDirectory() as tmp:
+            app = os.path.join(tmp, 'directory', 'app.py')
+            app_setup(app, '../lib.py')
+            lib = os.path.join(tmp, 'lib.py')
+            lib_setup(lib)
 
-      stdout = subprocess.check_output(['python', app])
-      self.assertEqual(stdout, b'world\n')
+            stdout = subprocess.check_output(['python', app])
+            self.assertEqual(stdout, b'world\n')
 
-  def test_arbitrary(self):
-    with TemporaryDirectory() as tmp:
-      app = os.path.join(tmp, 'directory', 'app.py')
-      app_setup(app, '../folder/lib.py')
-      lib = os.path.join(tmp, 'folder', 'lib.py')
-      lib_setup(lib)
+    def test_arbitrary(self):
+        with TemporaryDirectory() as tmp:
+            app = os.path.join(tmp, 'directory', 'app.py')
+            app_setup(app, '../folder/lib.py')
+            lib = os.path.join(tmp, 'folder', 'lib.py')
+            lib_setup(lib)
 
-      stdout = subprocess.check_output(['python', app])
-      self.assertEqual(stdout, b'world\n')
+            stdout = subprocess.check_output(['python', app])
+            self.assertEqual(stdout, b'world\n')
 
-  def test_absolute(self):
-    with TemporaryDirectory() as tmp:
-      app = os.path.join(tmp, 'app.py')
-      lib = os.path.join(tmp, 'lib.py')
-      app_setup(app, lib)
-      lib_setup(lib)
+    def test_absolute(self):
+        with TemporaryDirectory() as tmp:
+            app = os.path.join(tmp, 'app.py')
+            lib = os.path.join(tmp, 'lib.py')
+            app_setup(app, lib)
+            lib_setup(lib)
 
-      stdout = subprocess.check_output(['python', app])
-      self.assertEqual(stdout, b'world\n')
+            stdout = subprocess.check_output(['python', app])
+            self.assertEqual(stdout, b'world\n')
 
+    def test_package(self):
+        with TemporaryDirectory() as tmp:
+            app = os.path.join(tmp, 'app.py')
+            lib = os.path.join(tmp, 'directory', '__init__.py')
+            app_setup(app, './directory')
+            lib_setup(lib)
 
-  def test_package(self):
-    with TemporaryDirectory() as tmp:
-      app = os.path.join(tmp, 'app.py')
-      lib = os.path.join(tmp, 'directory', '__init__.py')
-      app_setup(app, './directory')
-      lib_setup(lib)
-
-      stdout = subprocess.check_output(['python', app])
-      self.assertEqual(stdout, b'world\n')
-
+            stdout = subprocess.check_output(['python', app])
+            self.assertEqual(stdout, b'world\n')
 
   def test_no_file(self):
-    with TemporaryDirectory() as tmp:
-      app = os.path.join(tmp, 'app.py')
-      app_setup(app, './lib.py')
-      lib = os.path.join(tmp, 'lib.py')
+      with TemporaryDirectory() as tmp:
+          app = os.path.join(tmp, 'app.py')
+          app_setup(app, './lib.py')
+          lib = os.path.join(tmp, 'lib.py')
 
-      stdout = subprocess.check_output(['python', app])
-      self.assertEqual(stdout, str.encode('No module at {}\n'.format(lib)))
+          stdout = subprocess.check_output(['python', app])
+          self.assertEqual(stdout, str.encode('No module at {}\n'.format(lib)))
 
   def test_invalid_python(self):
-    with TemporaryDirectory() as tmp:
-      app = os.path.join(tmp, 'app.py')
-      app_setup(app, './lib.py')
-      lib = os.path.join(tmp, 'lib.py')
-      place_at_path(garbage, lib)
+      with TemporaryDirectory() as tmp:
+          app = os.path.join(tmp, 'app.py')
+          app_setup(app, './lib.py')
+          lib = os.path.join(tmp, 'lib.py')
+          place_at_path(garbage, lib)
 
-      stdout = subprocess.check_output(['python', app])
-      self.assertEqual(stdout, str.encode("name '{}' is not defined\n".format(garbage)))
+          stdout = subprocess.check_output(['python', app])
+          self.assertEqual(stdout, str.encode("name '{}' is not defined\n".format(garbage)))
 
 if __name__ == '__main__':
-  unittest.main()
+    unittest.main()

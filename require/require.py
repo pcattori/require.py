@@ -41,18 +41,18 @@ def load_py2_module_at(absolute_path):
       >>> require.load_module_at('/absolute/path/to/module')
       Module
     '''
-  import imp
-  if os.path.isdir(absolute_path):
-      absolute_path = os.path.join(absolute_path, '__init__.py')
+    import imp
+    if os.path.isdir(absolute_path):
+        absolute_path = os.path.join(absolute_path, '__init__.py')
 
-  if not os.path.exists(absolute_path):
-      raise ImportError('No module at {}'.format(absolute_path))
-  # compute directory path and filename without extension
-  dirpath, filename = os.path.split(absolute_path)
-  filename_noext, _ = os.path.splitext(filename)
+    if not os.path.exists(absolute_path):
+        raise ImportError('No module at {}'.format(absolute_path))
+    # compute directory path and filename without extension
+    dirpath, filename = os.path.split(absolute_path)
+    filename_noext, _ = os.path.splitext(filename)
 
-  spec = imp.find_module(filename_noext, [dirpath])
-  return imp.load_module(absolute_path, *spec)
+    spec = imp.find_module(filename_noext, [dirpath])
+    return imp.load_module(absolute_path, *spec)
 
 def resolve_path(path, upstack=0):
     '''Resolve a path to an absolute path by taking it to be relative to the source
@@ -77,7 +77,6 @@ def resolve_path(path, upstack=0):
     caller_root = os.path.dirname(os.path.abspath(caller_relative_filepath))
     return os.path.abspath(os.path.join(caller_root, path))
 
-# TODO python2/3 compatible?
 def require(path):
     '''Imports Python module at specified path (relative to calling script).
 
@@ -100,6 +99,6 @@ def require(path):
     '''
     absolute_path = resolve_path(path, upstack=1)
     if six.PY2:
-      return load_py2_module_at(absolute_path)
+        return load_py2_module_at(absolute_path)
     return load_module_at(absolute_path)
 
