@@ -16,6 +16,8 @@ lib = require.require3('{}')
 print(lib.hello())
 '''
 
+garbage = '''lfasjdlfkjasoifdphoq'''
+
 def app_setup(path, lib_relative):
     place_at_path(app_code_template.format(lib_relative), path)
 
@@ -85,16 +87,12 @@ class RequireTest(unittest.TestCase):
 
   # package with __init__
 
-  # sys.modules handling
-  # module obj returned (with correct contents)
 
   # ImportError for non-sense
     # no file found
     # not python file
 
-  # integration test: require test
-  def test_require(self):
-    pass
+  # TODO caching... maybe we should handle that?
 
 if __name__ == '__main__':
   unittest.main()
