@@ -12,11 +12,16 @@ def hello():
 
 app_code_template = '''
 from require import require
-lib = require.require3('{}')
-print(lib.hello())
+#import sys
+try:
+  lib = require.require3('{}')
+  print(lib.hello())
+except Exception as e:
+  print(str(e))
+  #sys.exit(1)
 '''
 
-garbage = '''lfasjdlfkjasoifdphoq'''
+garbage = '''lfasjd'''
 
 def app_setup(path, lib_relative):
     place_at_path(app_code_template.format(lib_relative), path)
@@ -85,14 +90,35 @@ class RequireTest(unittest.TestCase):
       self.assertEqual(stdout, b'world\n')
 
 
-  # package with __init__
+  def test_package(self):
+    with tempfile.TemporaryDirectory() as tmp:
+      app = os.path.join(tmp, 'app.py')
+      lib = os.path.join(tmp, 'directory', '__init__.py')
+      app_setup(app, './directory')
+      lib_setup(lib)
+
+      stdout = subprocess.check_output(['python', app])
+      self.assertEqual(stdout, b'world\n')
 
 
-  # ImportError for non-sense
-    # no file found
-    # not python file
+  def test_no_file(self):
+    with tempfile.TemporaryDirectory() as tmp:
+      app = os.path.join(tmp, 'app.py')
+      app_setup(app, './lib.py')
+      lib = os.path.join(tmp, 'lib.py')
 
-  # TODO caching... maybe we should handle that?
+      stdout = subprocess.check_output(['python', app])
+      self.assertEqual(stdout, str.encode('No module at {}\n'.format(lib)))
+
+  def test_invalid_python(self):
+    with tempfile.TemporaryDirectory() as tmp:
+      app = os.path.join(tmp, 'app.py')
+      app_setup(app, './lib.py')
+      lib = os.path.join(tmp, 'lib.py')
+      place_at_path(garbage, lib)
+
+      stdout = subprocess.check_output(['python', app])
+      self.assertEqual(stdout, str.encode("name '{}' is not defined\n".format(garbage)))
 
 if __name__ == '__main__':
   unittest.main()
