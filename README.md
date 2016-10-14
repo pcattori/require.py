@@ -1,6 +1,6 @@
 # require.py
 
-Inspired by [Node.js](http://node.org/) `require`
+Inspired by [require.js](http://requirejs.org/)
 
 ## Install
 
@@ -11,11 +11,11 @@ $ pip install require.py
 ## Usage
 
 ```python
-import require
-mod = require.py('relative/path/to/module')
+from require import require
+mod = require('relative/path/to/module.py')
 
 # alternatively, use absolute path
-mod = require.py('/absolute/path/to/module')
+mod = require('/absolute/path/to/module.py')
 ```
 
 ## Example
@@ -37,8 +37,8 @@ def hello():
 
 ```python
 # foo-directory/foo
-import require
-bar = require.py('../bar-directory/bar') # '.py' extension is optional
+from require import require
+bar = require.require('../bar-directory/bar.py')
 
 print bar.CONST
 print bar.hello()
