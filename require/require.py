@@ -28,6 +28,18 @@ def load_module_at(absolute_path):
     return module
 
 def load_py2_module_at(absolute_path):
+    '''Loads Python 2 module at specified absolute path. If path points to a
+    package, this will load the `__init__.py` (if it exists) for that package.
+
+    :param str absolute_path: Absolute path to the desired Python module.
+    :return: Imported Python module
+    :rtype: types.ModuleType
+
+    Usage::
+      >>> import require
+      >>> require.load_module_at('/absolute/path/to/module')
+      Module
+    '''
   import imp
   if os.path.isdir(absolute_path):
       absolute_path = os.path.join(absolute_path, '__init__.py')
