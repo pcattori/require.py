@@ -55,12 +55,11 @@ def load_py2_module_at(absolute_path):
     return imp.load_module(absolute_path, *spec)
 
 def resolve_path(path, upstack=0):
-    '''Resolve a path to an absolute path by taking it to be relative to the source
-    code of the caller's stackframe shifted up by `upstack` frames.
+    '''Resolve a path to an absolute path by taking it to be relative to the
+    source code of the caller's stackframe shifted up by `upstack` frames.
 
     :param str path: Filesystem path
-    :param int upstack: Number of stackframes upwards from caller's stackframe
-    to act as relative point.
+    :param int upstack: Number of stackframes upwards from caller's stackframe to act as relative point.
 
     #: TODO Usage example is not great on REPL...
 
@@ -80,8 +79,7 @@ def resolve_path(path, upstack=0):
 def require(path):
     '''Imports Python module at specified path (relative to calling script).
 
-    :param str path: Relative path to the desired Python module. Should be
-    relative to the path of the calling script.
+    :param str path: Relative path to the desired Python module. Should be relative to the path of the calling script.
     :return: Loaded module
     :rtype: types.ModuleType
 
