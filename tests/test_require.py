@@ -7,7 +7,15 @@ import unittest
 try:
     from tempfile import TemporaryDirectory
 except ImportError:
-    from backports.tempfile import TemporaryDirectory
+    import contextlib
+    import shutil
+    import tempfile
+
+    @contextlib.contextmanager
+    def TemporaryDirectory():
+        dirpath = tempfile.mkdtemp()
+        yield dirpath
+        shutil.rmtree(dirpath)
 
 lib_code = '''# lib.py
 def hello():

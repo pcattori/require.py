@@ -51,8 +51,8 @@ def load_py2_module_at(absolute_path):
     dirpath, filename = os.path.split(absolute_path)
     filename_noext, _ = os.path.splitext(filename)
 
-    spec = imp.find_module(filename_noext, [dirpath])
-    return imp.load_module(absolute_path, *spec)
+    spec = imp.find_module(os.path.splitext(filename)[0], [dirpath])
+    return imp.load_module(os.path.splitext(absolute_path)[0], *spec)
 
 def resolve_path(path, upstack=0):
     '''Resolve a path to an absolute path by taking it to be relative to the source
