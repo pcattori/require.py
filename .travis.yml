@@ -7,3 +7,4 @@ install: pip install .
 script:
 - python setup.py caniusepython3
 - pylint --py3k require tests
+- python setup.py test
