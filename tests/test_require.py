@@ -7,7 +7,6 @@ import unittest
 try:
     from tempfile import TemporaryDirectory
 except ImportError:
-    # backports.tempfile has a bug: TODO
     import contextlib
     import shutil
     import tempfile
