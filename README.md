@@ -13,6 +13,8 @@ $ pip install require.py
 
 ## Usage
 
+### python 3.5+
+
 ```python
 from require import require
 mod = require('relative/path/to/module.py')
