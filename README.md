@@ -21,6 +21,18 @@ mod = require('relative/path/to/module.py')
 mod = require('/absolute/path/to/module.py')
 ```
 
+### python2.7
+
+Use `require2` instead:
+
+```python
+from require import require
+mod = require2('relative/path/to/module.py')
+
+# alternatively, use absolute path
+mod = require2('/absolute/path/to/module.py')
+```
+
 ## Example
 
 directory structure:
