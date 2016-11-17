@@ -35,13 +35,13 @@ directory structure:
 CONST = 'string constant'
 
 def hello():
-  return world
+  return 'world'
 ```
 
 ```python
-# foo-directory/foo
+# foo-directory/foo.py
 from require import require
-bar = require.require('../bar-directory/bar.py')
+bar = require('../bar-directory/bar.py')
 
 print bar.CONST
 print bar.hello()
